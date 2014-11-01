@@ -8,4 +8,6 @@ require "bundler/gem_tasks"
 RSpec::Core::RakeTask.new(:spec)
 task default: :spec
 
-import "tasks/setup.rake"
+Dir["tasks/*.rake"].each do |task|
+  import task
+end

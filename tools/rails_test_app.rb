@@ -1,10 +1,12 @@
 class RailsTestApp
-  attr_reader :path, :command, :options
+  attr_reader :path, :create_command, :destroy_command, :options
 
   def initialize(version, *options)
     @path    = "spec/.rails/rails-#{version}"
-    @command = "bundle exec rails new #{path}"
     @options = ( %w(--skip-bundle --skip-test-unit --skip-gemfile) + options ).uniq
+
+    @create_command  = "bundle exec rails new #{path}"
+    @destroy_command = "rm -rf #{path}"
   end
 
   def option
@@ -12,7 +14,11 @@ class RailsTestApp
   end
 
   def create
-    system("#{command} #{option}") unless exists?
+    system("#{create_command} #{option}") unless exists?
+  end
+
+  def destroy
+    system(destroy_command) if exists?
   end
 
   def exists?
