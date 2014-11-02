@@ -13,4 +13,5 @@
 *.a
 mkmf.log
 
+/config
 /spec/.rails

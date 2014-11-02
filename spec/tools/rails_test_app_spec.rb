@@ -16,6 +16,7 @@ describe RailsTestApp do
 
   describe "#create" do
     before { allow(test_app).to receive(:create_command).and_return("touch #{dummy_file}") }
+    before { allow(test_app).to receive(:template_param) }
     before { allow(test_app).to receive(:option) }
     after  { `rm -rf #{dummy_file}` }
 
@@ -51,7 +52,7 @@ describe RailsTestApp do
 
   describe "#exists?" do
     let(:spec_path) { "spec/" }
-    let(:void_path) { "does-not-exists" }
+    let(:void_path) { "does-not-exist" }
 
     context "path does not exists" do
       before { allow(test_app).to receive(:path).and_return(void_path) }
@@ -70,6 +71,28 @@ describe RailsTestApp do
     let(:options) { %i(a b) }
     before { allow(test_app).to receive(:options).and_return(options) }
 
-    it { expect(test_app.option).to eq("a b") }
+    it { expect(test_app.option).to eq "a b" }
+  end
+
+  describe "#template" do
+    context "template is not assigned" do
+      let(:default_template) { 'default-template' }
+      before { stub_const("RailsTestApp::DEFAULT_TEMPLATE", default_template) }
+
+      it { expect(test_app.template).to eq default_template }
+    end
+
+    context "template is assigned" do
+      let(:a_template) { 'a-template' }
+      before { test_app.template = a_template }
+
+      it { expect(test_app.template).to eq a_template }
+    end
+  end
+
+  describe "#template_param" do
+    before { allow(test_app).to receive(:template).and_return('a-template') }
+
+    it { expect(test_app.template_param).to eq '--template=a-template' }
   end
 end
