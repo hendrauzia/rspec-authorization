@@ -2,4 +2,4 @@ language: ruby
 rvm:
   - 2.1.4
 before_script:
-  - time bundle exec rake setup
+  - bundle exec rake setup
