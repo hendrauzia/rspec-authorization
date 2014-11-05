@@ -3,7 +3,8 @@ require 'rails_test_app'
 
 describe RailsTestApp do
   let(:test_app)   { RailsTestApp.new(:version) }
-  let(:dummy_file) { 'tmp/dummy-rails-test-app' }
+  let(:temp_path)  { "tmp" }
+  let(:dummy_file) { "#{temp_path}/dummy-rails-test-app" }
 
   describe ".new" do
     subject(:test_app) { RailsTestApp.new("4.1.6", "--skip-javascript") }
@@ -18,6 +19,7 @@ describe RailsTestApp do
     before { allow(test_app).to receive(:create_command).and_return("touch #{dummy_file}") }
     before { allow(test_app).to receive(:template_param) }
     before { allow(test_app).to receive(:option) }
+    before { `mkdir #{temp_path}` }
     after  { `rm -rf #{dummy_file}` }
 
     context "path does not exists" do
