@@ -2,6 +2,10 @@
 
 [![Gem Version](https://badge.fury.io/rb/rspec-authorization.svg)](http://badge.fury.io/rb/rspec-authorization)
 [![Build Status](https://travis-ci.org/hendrauzia/rspec-authorization.svg)](https://travis-ci.org/hendrauzia/rspec-authorization)
+[![Code Climate](https://codeclimate.com/github/hendrauzia/rspec-authorization/badges/gpa.svg)](https://codeclimate.com/github/hendrauzia/rspec-authorization)
+[![Test Coverage](https://codeclimate.com/github/hendrauzia/rspec-authorization/badges/coverage.svg)](https://codeclimate.com/github/hendrauzia/rspec-authorization)
+[![Dependency Status](https://gemnasium.com/hendrauzia/rspec-authorization.svg)](https://gemnasium.com/hendrauzia/rspec-authorization)
+[![security](https://hakiri.io/github/hendrauzia/rspec-authorization/master.svg)](https://hakiri.io/github/hendrauzia/rspec-authorization/master)
 
 RSpec matcher for declarative_authorization. A neat way of asserting declarative_authorization's rules inside controller using RSpec matcher.
 

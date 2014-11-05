@@ -8,6 +8,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'pry'
   gem 'terminal-notifier-guard' if `uname` =~ /Darwin/
+  gem "codeclimate-test-reporter", require: nil
 
   gem 'jquery-rails'
   gem 'turbolinks'
