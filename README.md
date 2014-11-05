@@ -1,5 +1,7 @@
 # Rspec::Authorization
 
+[![Gem Version](https://badge.fury.io/rb/rspec-authorization.svg)](http://badge.fury.io/rb/rspec-authorization)
+
 RSpec matcher for declarative_authorization. A neat way of asserting declarative_authorization's rules inside controller using RSpec matcher.
 
 ## Installation
@@ -17,6 +19,14 @@ And then execute:
 Or install it yourself as:
 
     $ gem install rspec-authorization
+
+## Usage
+
+In your controller spec:
+
+    describe PostsController do
+      it { is_expected.to have_permission_for(:role_name).to(:restful_action_name) }
+    end
 
 ## Contributing
 
