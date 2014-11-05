@@ -9,6 +9,7 @@ generate "scaffold post --skip-assets --skip-helper"
 generate "migration AddUserIdToPosts user:references"
 
 rake "db:migrate"
+run "bundle exec rake db:migrate RAILS_ENV=test"
 
 first_line = /\A.*/
 last_line  = /^.*\Z/

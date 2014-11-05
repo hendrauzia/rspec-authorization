@@ -1,0 +1,2 @@
+class GroupTestClass
+end
