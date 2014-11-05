@@ -22,6 +22,8 @@ Or install it yourself as:
 
 1. Fork it ( https://github.com/hendrauzia/rspec-authorization/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+3. Setup rails test app (`bundle exec rake setup`)
+3. Test your changes (`bundle exec rake spec`)
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create a new Pull Request
