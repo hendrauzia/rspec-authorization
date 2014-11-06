@@ -13,3 +13,7 @@ group :development, :test do
   gem 'jquery-rails'
   gem 'turbolinks'
 end
+
+group :docs do
+  gem "yard"
+end
