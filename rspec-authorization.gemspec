@@ -4,7 +4,7 @@ require 'rspec/authorization/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "rspec-authorization"
-  spec.version       = Rspec::Authorization::VERSION
+  spec.version       = RSpec::Authorization::VERSION
   spec.authors       = ["Hendra Uzia"]
   spec.email         = ["hendra.uzia@gmail.com"]
   spec.summary       = %q{RSpec matcher for declarative_authorization.}
@@ -18,10 +18,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "declarative_authorization"
-  spec.add_runtime_dependency "rspec-rails"
+  spec.add_runtime_dependency "rails", "~> 4.0"
+  spec.add_runtime_dependency "rspec-rails", "~> 3.0"
 
   spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rails", "~> 4.0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "sqlite3"

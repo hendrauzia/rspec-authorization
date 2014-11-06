@@ -1,4 +1,4 @@
-# Rspec::Authorization
+# RSpec::Authorization
 
 [![Gem Version](https://badge.fury.io/rb/rspec-authorization.svg)](http://badge.fury.io/rb/rspec-authorization)
 [![Build Status](https://travis-ci.org/hendrauzia/rspec-authorization.svg)](https://travis-ci.org/hendrauzia/rspec-authorization)
@@ -8,23 +8,33 @@
 [![security](https://hakiri.io/github/hendrauzia/rspec-authorization/master.svg)](https://hakiri.io/github/hendrauzia/rspec-authorization/master)
 [![Inline docs](http://inch-ci.org/github/hendrauzia/rspec-authorization.svg?branch=master)](http://inch-ci.org/github/hendrauzia/rspec-authorization)
 
-RSpec matcher for declarative_authorization. A neat way of asserting declarative_authorization's rules inside controller using RSpec matcher.
+RSpec matcher for declarative_authorization. A neat way of asserting 
+declarative_authorization's rules inside controller using RSpec matcher.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'rspec-authorization'
-```
+
+    gem 'rspec-authorization', group: :test
+
 
 And then execute:
 
-    $ bundle
+    bundle
 
 Or install it yourself as:
 
-    $ gem install rspec-authorization
+    gem install rspec-authorization
+
+## Requirement
+
+Current development focus is as follows, future development may support other
+dependencies, following are requirements for this gem:
+
+- declarative_authorization 1.0.0.pre
+- rails 4.x
+- rspec-rails 3.x
 
 ## Usage
 
