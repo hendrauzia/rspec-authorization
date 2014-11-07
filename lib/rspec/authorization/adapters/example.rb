@@ -10,13 +10,13 @@ module RSpec::Authorization
     # trick to run the example without producing unnecessary artifacts is to
     # trigger +target#run_before_example+.
     class Example
-      # @return [Class] target of +Group+ class
+      # @return [Class] target of +ExampleGroup+ class
       attr_reader :group_target
       # @return [RSpec::Core::Example] instance of RSpec's example
       attr_reader :target
 
-      # @param group_target [Class] retrieved from Group#target
-      # @see Group
+      # @param group_target [Class] retrieved from ExampleGroup#target
+      # @see ExampleGroup
       def initialize(group_target)
         @group_target = group_target
         @target       = RSpec::Core::Example.new(group_target, "", {})
