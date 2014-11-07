@@ -18,7 +18,20 @@ module RSpec::Authorization
     # ActiveRecord::RecordNotFound is rescued and bypassed, therefore it will not
     # affect the request.
     class Request
-      attr_reader :klass, :action, :role, :group, :route, :response
+      # @return [Class] controller class name
+      attr_reader :klass
+      # @return [Symbol] controller action name
+      attr_reader :action
+      # @return [Symbol] role name from +config/authorization_rules.rb+
+      attr_reader :role
+      # @return [ExampleGroup] example group of the request
+      # @see ExampleGroup
+      attr_reader :group
+      # @return [Route] route object of the action
+      # @see Route
+      attr_reader :route
+      # @return [ActionController::TestResponse] response object of the request
+      attr_reader :response
 
       # Create request object and immediately run the request.
       #

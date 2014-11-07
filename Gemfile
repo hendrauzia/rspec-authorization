@@ -15,5 +15,6 @@ group :development, :test do
 end
 
 group :docs do
+  gem "rdoc"
   gem "yard"
 end
