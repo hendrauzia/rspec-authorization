@@ -5,12 +5,12 @@ module RSpec::Authorization
 
       def initialize(klass, action, role)
         @klass, @action, @role = klass, action, role
-        @group, @route = Group.new(klass), Route.new(action)
+        @group, @route = ExampleGroup.new(klass), Route.new(action)
 
         stub_current_user
 
         setup_response_retrieval
-        dispatch
+        group.run_example
       end
 
       private
@@ -26,7 +26,7 @@ module RSpec::Authorization
       def stub_current_user
         roles  = role_symbols
 
-        group.before do
+        group.push do
           user = double(:user, role_symbols: roles)
           allow(controller).to receive(:current_user).and_return(user)
         end
@@ -36,7 +36,7 @@ module RSpec::Authorization
         args   = route
         setter = response_setter
 
-        group.before do
+        group.push do
           begin
             send *args
           rescue ActiveRecord::RecordNotFound
@@ -45,11 +45,6 @@ module RSpec::Authorization
 
           setter.call(response)
         end
-      end
-
-      def dispatch
-        example = Example.new(group)
-        example.run
       end
     end
   end
