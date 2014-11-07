@@ -1,11 +1,25 @@
 module RSpec::Authorization
   module Adapters
+    # Wrapper to generate and immediately run example from +RSpec::Core::Example+.
+    # The purpose of this class is to abstract running of an example without
+    # unnecessary artifacts from an RSpec's example, such as: reporting, context
+    # and expectation.
+    #
+    # The sole purpose of this class is to generate the most minimum required
+    # variable to create and run example, for our matcher to run against. The
+    # trick to run the example without producing unnecessary artifacts is to
+    # trigger +target#run_before_example+.
     class Example
-      attr_reader :group, :target
+      # @return [Class] target of +Group+ class
+      attr_reader :group_target
+      # @return [RSpec::Core::Example] instance of RSpec's example
+      attr_reader :target
 
+      # @param group_target [Class] retrieved from Group#target
+      # @see Group
       def initialize(group_target)
-        @group  = group_target
-        @target = RSpec::Core::Example.new(group, "", {})
+        @group_target = group_target
+        @target       = RSpec::Core::Example.new(group_target, "", {})
 
         set_example_group_instance
         run_before_example
@@ -14,7 +28,7 @@ module RSpec::Authorization
       private
 
       def set_example_group_instance
-        target.instance_variable_set :@example_group_instance, group.new
+        target.instance_variable_set :@example_group_instance, group_target.new
       end
 
       def run_before_example

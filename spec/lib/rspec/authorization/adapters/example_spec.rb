@@ -11,13 +11,15 @@ describe Example do
 
   subject { example }
 
-  its(:group)  { is_expected.to eq group.target }
-  its(:target) { is_expected.to be_a_kind_of RSpec::Core::Example }
+  its(:group_target) { is_expected.to eq group.target }
+  its(:target)       { is_expected.to be_a_kind_of RSpec::Core::Example }
 
   context "private" do
     describe "#set_example_group_instance" do
-      before { example.send :set_example_group_instance }
-      specify { expect(example.target.instance_variable_get :@example_group_instance).to be_a_kind_of group.target }
+      before { allow(example).to receive(:group_target).and_return(klass) }
+      before { example.send(:set_example_group_instance) }
+
+      specify { expect(example.target.instance_variable_get(:@example_group_instance)).to be_a_kind_of klass }
     end
   end
 end
