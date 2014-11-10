@@ -17,7 +17,7 @@ module RSpec::Authorization
       # Matcher to check permission of a role for a given controller in a spec. The
       # following statement shows you how to use this matcher:
       #
-      #   describe PostsController do
+      #   describe ArticlesController do
       #     it { is_expected.to have_permission_for(:user).to(:index) }
       #   end
       #
@@ -34,14 +34,14 @@ module RSpec::Authorization
         HavePermissionFor.new(role)
       end
 
-      class HavePermissionFor
+      class HavePermissionFor # :nodoc: all
         include Adapters
 
         attr_reader :controller, :role, :action
 
         def initialize(role)
           @role   = role
-          @action = :index
+          @action = Array.new
         end
 
         def to(action)
@@ -65,7 +65,7 @@ module RSpec::Authorization
         end
 
         def description
-          "have permission for #{role} on #{action}"
+          "have permission for #{role} to #{action}"
         end
       end
     end

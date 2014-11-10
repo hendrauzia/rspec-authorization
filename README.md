@@ -8,7 +8,7 @@
 [![security](https://hakiri.io/github/hendrauzia/rspec-authorization/master.svg)](https://hakiri.io/github/hendrauzia/rspec-authorization/master)
 [![Inline docs](http://inch-ci.org/github/hendrauzia/rspec-authorization.svg?branch=master)](http://inch-ci.org/github/hendrauzia/rspec-authorization)
 
-RSpec matcher for declarative_authorization. A neat way of asserting 
+RSpec matcher for declarative_authorization. A neat way of asserting
 declarative_authorization's rules inside controller using RSpec matcher.
 
 ## Installation
@@ -40,7 +40,7 @@ dependencies, following are requirements for this gem:
 
 In your controller spec:
 
-    describe PostsController do
+    describe ArticlesController do
       it { is_expected.to have_permission_for(:role_name).to(:restful_action_name) }
     end
 

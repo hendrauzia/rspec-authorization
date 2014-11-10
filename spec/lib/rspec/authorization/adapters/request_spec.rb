@@ -3,9 +3,9 @@ require 'rails_helper'
 include RSpec::Authorization::Adapters
 
 describe Request do
-  let(:klass)   { PostsController }
-  let(:action)  { :index }
-  let(:role)    { :user }
+  let(:klass)   { ArticlesController }
+  let(:action)  { :update }
+  let(:role)    { :editor }
   let(:request) { Request.new(klass, action, role) }
 
   subject { request }

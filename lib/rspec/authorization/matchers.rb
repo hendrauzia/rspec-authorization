@@ -1,7 +1,7 @@
 require 'rspec/authorization/matchers/have_permission_for'
 
 module RSpec::Authorization
-  module Matchers
+  module Matchers # :nodoc:
   end
 end
 

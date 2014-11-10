@@ -15,7 +15,7 @@ module RSpec::Authorization
     # inferred as an array.
     #
     # Creating a route will generate a route object:
-    # 
+    #
     #   route = Route.new(:index)
     #   route # => #<Route:...>
     #

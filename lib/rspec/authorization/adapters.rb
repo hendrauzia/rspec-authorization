@@ -4,7 +4,7 @@ require "rspec/authorization/adapters/request"
 require "rspec/authorization/adapters/route"
 
 module RSpec::Authorization
-  module Adapters
+  module Adapters # :nodoc:
   end
 end
 

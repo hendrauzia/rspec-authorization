@@ -3,17 +3,23 @@ require 'rails_helper'
 include RSpec::Authorization::Adapters
 
 describe ExampleGroup do
-  let(:klass)         { PostsController }
-  let(:instruction)   { ->{} }
+  let(:klass)         { ArticlesController }
   let(:example_group) { ExampleGroup.new(klass) }
+
+  let(:before_instruction)   { ->{ :before } }
+  let(:after_instruction)    { ->{ :after } }
 
   describe "target" do
     subject { example_group.target }
     its(:described_class) { is_expected.to eq klass }
   end
 
-  describe "#push" do
-    specify { expect(example_group.push(&instruction).last.block).to eq instruction }
+  describe "#before" do
+    specify { expect(example_group.before(&before_instruction).last.block).to eq before_instruction }
+  end
+
+  describe "#after" do
+    specify { expect(example_group.after(&after_instruction).first.block).to eq after_instruction }
   end
 
   describe "#run_example" do
