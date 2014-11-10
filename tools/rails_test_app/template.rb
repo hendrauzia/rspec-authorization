@@ -31,8 +31,12 @@ inject_into_file "config/authorization_rules.rb", %q{
     has_permission_on :articles, to: %i(read create)
   end
 
-  role :user do
+  role :premium do
     has_permission_on :articles, to: :read
+  end
+
+  role :user do
+    has_permission_on :articles, to: :index
   end
 }, after: first_line
 

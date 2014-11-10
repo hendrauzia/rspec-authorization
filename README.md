@@ -1,5 +1,8 @@
 # RSpec::Authorization
 
+[![GitHub](http://img.shields.io/badge/github-hendrauzia/rspec--authorization-blue.svg)](http://github.com/hendrauzia/rspec-authorization)
+[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/github/hendrauzia/rspec-authorization)
+
 [![Gem Version](https://badge.fury.io/rb/rspec-authorization.svg)](http://badge.fury.io/rb/rspec-authorization)
 [![Build Status](https://travis-ci.org/hendrauzia/rspec-authorization.svg)](https://travis-ci.org/hendrauzia/rspec-authorization)
 [![Code Climate](https://codeclimate.com/github/hendrauzia/rspec-authorization/badges/gpa.svg)](https://codeclimate.com/github/hendrauzia/rspec-authorization)
@@ -41,7 +44,31 @@ dependencies, following are requirements for this gem:
 In your controller spec:
 
     describe ArticlesController do
-      it { is_expected.to have_permission_for(:role_name).to(:restful_action_name) }
+      it { is_expected.to have_permission_for(:a_role).to(:restful_action_name) }
+
+      it { is_expected.to have_permission_for(:writer).to(:index) }
+      it { is_expected.to have_permission_for(:writer).to(:show) }
+      it { is_expected.to have_permission_for(:writer).to(:new) }
+      it { is_expected.to have_permission_for(:writer).to(:create) }
+      it { is_expected.not_to have_permission_for(:writer).to(:edit) }
+      it { is_expected.not_to have_permission_for(:writer).to(:update) }
+      it { is_expected.not_to have_permission_for(:writer).to(:destroy) }
+    end
+
+You can also use convenience RESTful methods matcher:
+
+    describe ArticlesController do
+      it { is_expected.to have_permission_for(:user).to_read }
+      it { is_expected.not_to have_permission_for(:user).to_create }
+      it { is_expected.not_to have_permission_for(:user).to_update }
+      it { is_expected.not_to have_permission_for(:user).to_delete }
+
+      it { is_expected.to have_permission_for(:writer).to_read }
+      it { is_expected.to have_permission_for(:writer).to_create }
+      it { is_expected.to have_permission_for(:writer).to_update }
+      it { is_expected.not_to have_permission_for(:writer).to_delete }
+
+      it { is_expected.to have_permission_for(:editor).to_manage }
     end
 
 ## Contributing
