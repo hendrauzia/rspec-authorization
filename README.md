@@ -2,6 +2,7 @@
 
 [![GitHub](http://img.shields.io/badge/github-hendrauzia/rspec--authorization-blue.svg)](http://github.com/hendrauzia/rspec-authorization)
 [![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/github/hendrauzia/rspec-authorization)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
 [![Gem Version](https://badge.fury.io/rb/rspec-authorization.svg)](http://badge.fury.io/rb/rspec-authorization)
 [![Build Status](https://travis-ci.org/hendrauzia/rspec-authorization.svg)](https://travis-ci.org/hendrauzia/rspec-authorization)
@@ -70,6 +71,17 @@ You can also use convenience RESTful methods matcher:
 
       it { is_expected.to have_permission_for(:editor).to_manage }
     end
+
+## History
+
+See {file:HISTORY.md} for history of changes.
+
+## License
+
+rspec-authorization &copy; 2014 by Hendra Uzia. rspec-authorization is
+licensed under the MIT license except for some files which come from the
+RDoc/Ruby distributions. Please see the {file:LICENSE.txt} documents
+for more information.
 
 ## Contributing
 
