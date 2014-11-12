@@ -42,7 +42,7 @@ module RSpec::Authorization
       # Consider the following example:
       #
       #   it { is_expected.to have_permission_for(:user).to_read }
-      #   it { is_expected.to have_permission_for(:user).to_edit }
+      #   it { is_expected.to have_permission_for(:user).to_create }
       #   it { is_expected.not_to have_permission_for(:user).to_update }
       #   it { is_expected.not_to have_permission_for(:user).to_delete }
       #
@@ -53,8 +53,8 @@ module RSpec::Authorization
       #   Method         RESTful action
       #   ------------------------------------
       #   to_read       [:index, :show]
-      #   to_edit       [:edit, :update]
       #   to_create     [:new, :create]
+      #   to_update       [:edit, :update]
       #   to_delete     [:destroy]
       #
       # Matcher for RESTful methods is slightly different than that of a single
@@ -87,46 +87,17 @@ module RSpec::Authorization
           self
         end
 
-        def to_read
-          @behave  = :read
-          @actions = %i(index show)
+        def method_missing(method_name, *args, &block)
+          matches        = /^to_(.*)$/.match(method_name)
+          restful_helper = matches[1].to_sym
+
+          raise NoMethodError unless RESTFUL_HELPERS.key?(restful_helper)
+          restful_methods = RESTFUL_HELPERS[restful_helper]
+
+          @behave  = restful_helper
+          @actions = restful_methods
 
           self
-        end
-
-        def to_create
-          @behave  = :create
-          @actions = %i(new create)
-
-          self
-        end
-
-        def to_update
-          @behave  = :update
-          @actions = %i(edit update)
-
-          self
-        end
-
-        def to_delete
-          @behave  = :delete
-          @actions = %i(destroy)
-
-          self
-        end
-
-        def to_manage
-          @behave  = :manage
-          @actions = %i(index show new create edit update destroy)
-
-          self
-        end
-
-        def all_requests
-          actions.map do |action|
-            request = Request.new(controller.class, action, role)
-            [action, request.response.status != 403]
-          end
         end
 
         def matches?(controller)
@@ -154,6 +125,23 @@ module RSpec::Authorization
         def description
           "have permission for #{role} to #{behave}"
         end
+
+        private
+
+        def all_requests
+          actions.map do |action|
+            request = Request.new(controller.class, action, role)
+            [action, request.response.status != 403]
+          end
+        end
+
+        RESTFUL_HELPERS = {
+          read:   %i(index show),
+          create: %i(new create),
+          update: %i(edit update),
+          delete: %i(destroy),
+          manage: %i(index show new create edit update destroy)
+        }
       end
     end
   end
