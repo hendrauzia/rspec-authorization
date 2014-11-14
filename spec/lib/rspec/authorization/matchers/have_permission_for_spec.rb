@@ -56,50 +56,13 @@ describe HavePermissionFor do
     end
   end
 
-  context "#method_missing" do
+  describe "#method_missing" do
     context "method not implemented" do
       specify { expect{ matcher.to_explode }.to raise_error NoMethodError }
     end
 
     context "method implemented" do
       specify { expect{ matcher.to_read }.not_to raise_error }
-    end
-  end
-
-  context "RESTful #to_(behave)" do
-    context "#to_read" do
-      subject { matcher.to_read }
-
-      its(:behave)  { is_expected.to eq :read }
-      its(:actions) { is_expected.to eq %i(index show) }
-    end
-
-    context "#to_create" do
-      subject { matcher.to_create }
-
-      its(:behave)  { is_expected.to eq :create }
-      its(:actions) { is_expected.to eq %i(new create) }
-    end
-
-    context "#to_update" do
-      subject { matcher.to_update }
-
-      its(:behave)  { is_expected.to eq :update }
-      its(:actions) { is_expected.to eq %i(edit update) }
-    end
-
-    context "#to_delete" do
-      subject { matcher.to_delete }
-
-      its(:behave)  { is_expected.to eq :delete }
-      its(:actions) { is_expected.to eq %i(destroy) }
-    end
-
-    context "#to_manage" do
-      subject { matcher.to_manage }
-
-      its(:behave)  { is_expected.to eq :manage }
-      its(:actions) { is_expected.to eq %i(index show new create edit update destroy) }
     end
   end
 end

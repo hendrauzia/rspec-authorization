@@ -1,3 +1,5 @@
+require "rspec/authorization/matchers/have_permission_for/restful_helper_method"
+
 module RSpec::Authorization
   module Matchers
     # Include this module to enable the +have_permission_for+ matcher inside RSpec.
@@ -21,7 +23,7 @@ module RSpec::Authorization
       #     it { is_expected.to have_permission_for(:user).to(:index) }
       #   end
       #
-      # Currently this matcher only support RESTful action check, to check the
+      # Currently this matcher only support restful action check, to check the
       # controller against +config/authorization_rules.rb+. Skipping the +#to+
       # method will result in default action assigned as +:index+.
       #
@@ -29,36 +31,19 @@ module RSpec::Authorization
       #
       #   it { is_expected.to have_permission_for(:user) }
       #
-      # === RESTful methods
+      # === RESTful helper methods
       #
-      # For your convenience, there are 4 RESTful methods available to be chained
-      # from the matcher, which are:
-      #
-      # - +to_read+
-      # - +to_create+
-      # - +to_update+
-      # - +to_delete+
-      #
-      # Consider the following example:
+      # For your convenience, there are restful helper methods available to be chained
+      # from the matcher, consider the following example:
       #
       #   it { is_expected.to have_permission_for(:user).to_read }
       #   it { is_expected.to have_permission_for(:user).to_create }
       #   it { is_expected.not_to have_permission_for(:user).to_update }
       #   it { is_expected.not_to have_permission_for(:user).to_delete }
+      #   it { is_expected.not_to have_permission_for(:user).to_manage }
       #
-      # The above method is not related to declarative_authorization privileges,
-      # and serve simply as convinience method, below is a table of RESTful actions
-      # for each method mentioned above:
-      #
-      #   Method         RESTful action
-      #   ------------------------------------
-      #   to_read       [:index, :show]
-      #   to_create     [:new, :create]
-      #   to_update       [:edit, :update]
-      #   to_delete     [:destroy]
-      #
-      # Matcher for RESTful methods is slightly different than that of a single
-      # method, following is how RESTful methods request results evaluated:
+      # Matcher for restful helper methods is slightly different than that of a single
+      # method, following is how restful helper methods request results evaluated:
       #
       #   all_requests (of #to_read)       matches?     does_not_match?
       #   -------------------------------------------------------------------
@@ -67,6 +52,7 @@ module RSpec::Authorization
       #   {index: false, show: false}      false        true
       #
       # @param role [Symbol] role name to matched against
+      # @see RestfulHelperMethod
       def have_permission_for(role)
         HavePermissionFor.new(role)
       end
@@ -88,14 +74,7 @@ module RSpec::Authorization
         end
 
         def method_missing(method_name, *args, &block)
-          matches        = /^to_(.*)$/.match(method_name)
-          restful_helper = matches[1].to_sym
-
-          raise NoMethodError unless RESTFUL_HELPERS.key?(restful_helper)
-          restful_methods = RESTFUL_HELPERS[restful_helper]
-
-          @behave  = restful_helper
-          @actions = restful_methods
+          @behave, @actions = RestfulHelperMethod.new(method_name)
 
           self
         end
@@ -134,14 +113,6 @@ module RSpec::Authorization
             [action, request.response.status != 403]
           end
         end
-
-        RESTFUL_HELPERS = {
-          read:   %i(index show),
-          create: %i(new create),
-          update: %i(edit update),
-          delete: %i(destroy),
-          manage: %i(index show new create edit update destroy)
-        }
       end
     end
   end
