@@ -56,7 +56,7 @@ In your controller spec:
       it { is_expected.not_to have_permission_for(:writer).to(:destroy) }
     end
 
-You can also use convenience RESTful methods matcher:
+You can also use convenience restful helper methods:
 
     describe ArticlesController do
       it { is_expected.to have_permission_for(:user).to_read }
@@ -70,6 +70,13 @@ You can also use convenience RESTful methods matcher:
       it { is_expected.not_to have_permission_for(:writer).to_delete }
 
       it { is_expected.to have_permission_for(:editor).to_manage }
+    end
+
+Or you can also use the focused restful helper method as follows:
+
+    describe ArticlesController do
+      it { is_expected.to have_permision_for(:user).only_to_read }
+      it { is_expected.to have_permision_for(:writer).except_to_delete }
     end
 
 ## History

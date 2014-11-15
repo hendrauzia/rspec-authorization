@@ -28,7 +28,7 @@ inject_into_file "config/authorization_rules.rb", %q{
   end
 
   role :writer do
-    has_permission_on :articles, to: %i(read create)
+    has_permission_on :articles, to: %i(read create update)
   end
 
   role :premium do

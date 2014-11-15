@@ -33,8 +33,8 @@ module RSpec::Authorization
       #
       # === RESTful helper methods
       #
-      # For your convenience, there are restful helper methods available to be chained
-      # from the matcher, consider the following example:
+      # For your convenience, there are restful helper methods available to be
+      # chained from the matcher, consider the following example:
       #
       #   it { is_expected.to have_permission_for(:user).to_read }
       #   it { is_expected.to have_permission_for(:user).to_create }
@@ -42,14 +42,55 @@ module RSpec::Authorization
       #   it { is_expected.not_to have_permission_for(:user).to_delete }
       #   it { is_expected.not_to have_permission_for(:user).to_manage }
       #
-      # Matcher for restful helper methods is slightly different than that of a single
-      # method, following is how restful helper methods request results evaluated:
+      # Matcher for restful helper methods is slightly different than that of
+      # a single method, following is an example of how restful helper methods
+      # request results evaluated:
       #
       #   all_requests (of #to_read)       matches?     does_not_match?
       #   -------------------------------------------------------------------
       #   {index: true, show: true}        true         false
       #   {index: true, show: false}       false        false
       #   {index: false, show: false}      false        true
+      #
+      # === Focused RESTful helper methods
+      #
+      # There are cases where you need to focused your matching only for a given
+      # criteria, let's say only match for read actions, or match except delete
+      # action, consider the following example:
+      #
+      #   it { is_expected.to have_permission_for(:user).only_to_read }
+      #   it { is_expected.to have_permission_for(:writer).except_to_delete }
+      #
+      # The above statements have their negated counterparts, consider the
+      # following example:
+      #
+      #   it { is_expected.not_to have_permission_for(:user).only_to_read }
+      #   it { is_expected.not_to have_permission_for(:writer).only_to_delete }
+      #
+      # If you see the above negated matcher, they actually have a relationship
+      # to the other's negated counterpart instead of theirs, consider the following
+      # example:
+      #
+      #   it { is_expected.to have_permission_for(:user).only_to_read }
+      #   it { is_expected.not_to have_permission_for(:user).except_to_read }
+      #
+      # The above examples are doing exactly the same thing, so does the following
+      # example, these examples below also doing exactly the same thing and can
+      # be used in either case:
+      #
+      #   it { is_expected.to have_permission_for(:writer).except_to_delete }
+      #   it { is_expected.not_to have_permission_for(:writer).only_to_read }
+      #
+      # That means, the following example, is actually negating each other and
+      # can be used to negate your statements instead of using the negated version
+      # of the matcher:
+      #
+      #   it { is_expected.to have_permission_for(:user).only_to_read }
+      #   it { is_expected.to have_permission_for(:user).except_to_read }
+      #
+      # Even if you can have a negated matcher using a focused restful helper
+      # methods, it is better to stick with the possitive matcher, negated matcher
+      # can easily confuse you, and it only serves the purpose of completeness.
       #
       # @param role [Symbol] role name to matched against
       # @see RestfulHelperMethod
@@ -60,13 +101,15 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :behave, :actions, :results
+        attr_reader :controller, :role, :prefix, :behave, :actions, :negated_actions, :results, :negated_results
 
         def initialize(role)
-          @role = role
+          @role    = role
+          @actions = @negated_actions = Array.new
         end
 
         def to(action)
+          @prefix  = :to
           @behave  = action
           @actions = [behave]
 
@@ -74,43 +117,75 @@ module RSpec::Authorization
         end
 
         def method_missing(method_name, *args, &block)
-          @behave, @actions = RestfulHelperMethod.new(method_name)
+          @prefix, @behave, @actions, @negated_actions = RestfulHelperMethod.new(method_name)
 
           self
         end
 
         def matches?(controller)
           @controller = controller
-          @results    = Hash[all_requests]
 
-          true unless results.value? false
+          @results         = Hash[all_requests]
+          @negated_results = Hash[all_negated_requests]
+
+          if negated_results.present?
+            permitted?(results) && forbidden?(negated_results)
+          else
+            permitted?(results)
+          end
         end
 
         def does_not_match?(controller)
           @controller = controller
-          @results    = Hash[all_requests]
 
-          true unless results.value? true
+          @results         = Hash[all_requests]
+          @negated_results = Hash[all_negated_requests]
+
+          if negated_results.present?
+            forbidden?(results) && permitted?(negated_results)
+          else
+            forbidden?(results)
+          end
         end
 
         def failure_message
-          "Expected #{controller.class} to have permission for #{role} to #{behave}. #{results}"
+          "Expected #{controller.class} to have permission for #{role} #{prefix_formatted} #{behave}. #{results}"
         end
 
         def failure_message_when_negated
-          "Did not expect #{controller.class} to have permission for #{role} to #{behave}. #{results}"
+          "Did not expect #{controller.class} to have permission for #{role} #{prefix_formatted} #{behave}. #{results}"
         end
 
         def description
-          "have permission for #{role} to #{behave}"
+          "have permission for #{role} #{prefix_formatted} #{behave}"
         end
 
         private
 
+        def prefix_formatted
+          prefix.to_s.sub("_", " ")
+        end
+
+        def permitted?(requests)
+          true unless requests.value? false
+        end
+
+        def forbidden?(requests)
+          true unless requests.value? true
+        end
+
         def all_requests
-          actions.map do |action|
-            request = Request.new(controller.class, action, role)
-            [action, request.response.status != 403]
+          run_requests(actions)
+        end
+
+        def all_negated_requests
+          run_requests(negated_actions)
+        end
+
+        def run_requests(params)
+          params.map do |param|
+            request = Request.new(controller.class, param, role)
+            [param, request.response.status != 403]
           end
         end
       end
