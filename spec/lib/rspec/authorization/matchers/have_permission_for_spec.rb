@@ -21,11 +21,11 @@ describe HavePermissionFor do
   its(:actions) { is_expected.to eq [action] }
 
   its(:description) { is_expected.to eq "have permission for #{role} to #{matcher.behave}" }
-  its(:failure_message) { is_expected.to eq "Expected #{klass} to have permission for #{role} to #{matcher.behave}. #{results}" }
-  its(:failure_message_when_negated) { is_expected.to eq "Did not expect #{klass} to have permission for #{role} to #{matcher.behave}. #{results}" }
+  its(:failure_message) { is_expected.to eq "Expected #{klass} to have permission for #{role} to #{matcher.behave}. results: #{results}, negated_results: " }
+  its(:failure_message_when_negated) { is_expected.to eq "Did not expect #{klass} to have permission for #{role} to #{matcher.behave}. results: #{results}, negated_results: " }
 
   context "evaluator" do
-    before { allow(matcher).to receive(:all_requests).and_return([]) }
+    before { allow(matcher).to receive(:requests).and_return([]) }
 
     describe "#matches?" do
       context "all requests permitted" do

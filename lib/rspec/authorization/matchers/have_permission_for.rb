@@ -105,7 +105,7 @@ module RSpec::Authorization
 
         def initialize(role)
           @role    = role
-          @actions = @negated_actions = Array.new
+          @actions = @negated_actions = []
         end
 
         def to(action)
@@ -123,37 +123,21 @@ module RSpec::Authorization
         end
 
         def matches?(controller)
-          @controller = controller
-
-          @results         = Hash[all_requests]
-          @negated_results = Hash[all_negated_requests]
-
-          if negated_results.present?
-            permitted?(results) && forbidden?(negated_results)
-          else
-            permitted?(results)
-          end
+          run_all_requests(controller)
+          permitted_or_forbidden?(:permitted?, :forbidden?)
         end
 
         def does_not_match?(controller)
-          @controller = controller
-
-          @results         = Hash[all_requests]
-          @negated_results = Hash[all_negated_requests]
-
-          if negated_results.present?
-            forbidden?(results) && permitted?(negated_results)
-          else
-            forbidden?(results)
-          end
+          run_all_requests(controller)
+          permitted_or_forbidden?(:forbidden?, :permitted?)
         end
 
         def failure_message
-          "Expected #{controller.class} to have permission for #{role} #{prefix_formatted} #{behave}. #{results}"
+          "Expected #{common_failure_message}"
         end
 
         def failure_message_when_negated
-          "Did not expect #{controller.class} to have permission for #{role} #{prefix_formatted} #{behave}. #{results}"
+          "Did not expect #{common_failure_message}"
         end
 
         def description
@@ -166,6 +150,18 @@ module RSpec::Authorization
           prefix.to_s.sub("_", " ")
         end
 
+        def common_failure_message
+          "#{controller.class} to #{description}. #{debug_results}"
+        end
+
+        def debug_results
+          "results: #{results}, negated_results: #{negated_results}"
+        end
+
+        def permitted_or_forbidden?(primary, secondary)
+          send(primary, results) && (negated_results.present? ? send(secondary, negated_results) : true)
+        end
+
         def permitted?(requests)
           true unless requests.value? false
         end
@@ -174,11 +170,11 @@ module RSpec::Authorization
           true unless requests.value? true
         end
 
-        def all_requests
+        def requests
           run_requests(actions)
         end
 
-        def all_negated_requests
+        def negated_requests
           run_requests(negated_actions)
         end
 
@@ -187,6 +183,13 @@ module RSpec::Authorization
             request = Request.new(controller.class, param, role)
             [param, request.response.status != 403]
           end
+        end
+
+        def run_all_requests(controller)
+          @controller = controller
+
+          @results         = Hash[requests]
+          @negated_results = Hash[negated_requests]
         end
       end
     end
