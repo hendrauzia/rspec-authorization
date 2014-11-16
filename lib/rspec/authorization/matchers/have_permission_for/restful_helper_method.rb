@@ -80,9 +80,9 @@ module RSpec::Authorization
         attr_reader :name
         # @return [Symbol] The behavior of the restful helper method
         attr_reader :behavior
-        # @return [Symbol] The list of action for a given behavior
+        # @return [Array<Symbol>] The list of actions for a given behavior
         attr_reader :actions
-        # @return [Symbol] The list of negated action for a given behavior
+        # @return [Array<Symbol>] The list of negated actions for a given behavior
         attr_reader :negated_actions
 
         # Creates a restful helper method using the available dictionaries. Invalid
@@ -94,28 +94,29 @@ module RSpec::Authorization
         #
         # @param name [Symbol] restful method name to be retrieved
         def initialize(name)
-          @prefix   = :to        if name.match(/^to_.*$/)
-          @prefix   = :only_to   if name.match(/^only_to_.*$/)
-          @prefix   = :except_to if name.match(/^except_to_.*$/)
+          @name, @prefix, @behavior = find_method(name).to_a.map(&:to_sym)
 
-          @name     = name.to_sym
-          @behavior = /^#{prefix}_(.*)$/.match(name)[1].to_sym
+          raise NoMethodError, error_message unless DICTIONARIES.key?(behavior)
 
-          raise NoMethodError, "undefined method `#{name}' for #{self.class}" unless DICTIONARIES.key?(behavior)
+          @actions         = DICTIONARIES[behavior]
+          @negated_actions = prefix.eql?(:to) ? [] : (DICTIONARIES[:manage] - actions)
 
-          @actions = DICTIONARIES[behavior]
-          @negated_actions = Array.new
-
-          unless prefix.eql?(:to)
-            @negated_actions = DICTIONARIES[:manage] - actions
-          end
-
-          if prefix.eql?(:except_to)
-            @actions, @negated_actions = negated_actions, actions
-          end
+          swap_negated_actions if prefix.eql?(:except_to)
         end
 
         private
+
+        def error_message
+          "undefined method `#{name}' for #{self.class}"
+        end
+
+        def find_method(name)
+          /^(to|only_to|except_to)_(.*)$/.match(name)
+        end
+
+        def swap_negated_actions
+          @actions, @negated_actions = negated_actions, actions
+        end
 
         def to_ary
           [prefix, behavior, actions, negated_actions]
