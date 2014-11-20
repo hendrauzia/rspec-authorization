@@ -1,18 +1,18 @@
 module RSpec::Authorization
   module Adapters
     class Resource # :nodoc:
-      attr_reader :klass, :actions, :role, :results
+      attr_reader :restful_helper_method
+      attr_accessor :controller_class, :role
 
-      def initialize(klass, actions, role)
-        @klass, @actions, @role = klass, actions, role
-        @results = run_requests(actions)
+      delegate :prefix, to: :restful_helper_method
+
+      def restful_helper_method=(method_name)
+        @restful_helper_method = RestfulHelperMethod.new(method_name)
       end
 
-      private
-
-      def run_requests(actions)
+      def run(actions)
         actions.map do |action|
-          request = Request.new(klass, action, role)
+          request = Request.new(controller_class, action, role)
           [action, request.response.status != 403]
         end
       end

@@ -1,5 +1,3 @@
-require "rspec/authorization/matchers/have_permission_for/restful_helper_method"
-
 module RSpec::Authorization
   module Matchers
     # Include this module to enable the +have_permission_for+ matcher inside RSpec.
@@ -101,11 +99,14 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :prefix, :behave, :actions, :negated_actions, :results, :negated_results
+        attr_reader :controller, :role, :prefix, :behave, :actions, :negated_actions, :results, :negated_results, :resource
 
         def initialize(role)
           @role    = role
           @actions = @negated_actions = []
+
+          @resource     = Resource.new
+          resource.role = role
         end
 
         def to(action)
@@ -117,17 +118,22 @@ module RSpec::Authorization
         end
 
         def method_missing(method_name, *args, &block)
-          @prefix, @behave, @actions, @negated_actions = RestfulHelperMethod.new(method_name)
+          resource.restful_helper_method = method_name
+          @prefix, @behave, @actions, @negated_actions = resource.restful_helper_method
 
           self
         end
 
         def matches?(controller)
+          resource.controller_class = controller.class
+
           run_all_requests(controller)
           permitted_or_forbidden?(:permitted?, :forbidden?)
         end
 
         def does_not_match?(controller)
+          resource.controller_class = controller.class
+
           run_all_requests(controller)
           permitted_or_forbidden?(:forbidden?, :permitted?)
         end
@@ -179,7 +185,7 @@ module RSpec::Authorization
         end
 
         def run_requests(params)
-          Resource.new(controller.class, params, role).results
+          resource.run(params)
         end
 
         def run_all_requests(controller)

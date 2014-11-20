@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-include RSpec::Authorization::Matchers::HavePermissionFor
+include RSpec::Authorization::Adapters
 
 describe RestfulHelperMethod do
   let(:restful_helper_method) { RestfulHelperMethod.new(name) }
