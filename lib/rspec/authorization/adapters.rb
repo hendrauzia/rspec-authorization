@@ -1,5 +1,6 @@
 require "rspec/authorization/adapters/example"
 require "rspec/authorization/adapters/example_group"
+require "rspec/authorization/adapters/resource"
 require "rspec/authorization/adapters/request"
 require "rspec/authorization/adapters/route"
 

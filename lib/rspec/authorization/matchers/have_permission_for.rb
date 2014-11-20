@@ -179,10 +179,7 @@ module RSpec::Authorization
         end
 
         def run_requests(params)
-          params.map do |param|
-            request = Request.new(controller.class, param, role)
-            [param, request.response.status != 403]
-          end
+          Resource.new(controller.class, params, role).results
         end
 
         def run_all_requests(controller)
