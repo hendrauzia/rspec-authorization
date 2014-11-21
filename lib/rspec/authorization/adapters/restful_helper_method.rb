@@ -103,6 +103,10 @@ module RSpec::Authorization
         swap_negated_actions if prefix.eql?(:except_to)
       end
 
+      def humanize
+        name.to_s.gsub("_", " ")
+      end
+
       private
 
       def error_message
@@ -117,8 +121,8 @@ module RSpec::Authorization
         @actions, @negated_actions = negated_actions, actions
       end
 
-      def to_ary
-        [prefix, behavior, actions, negated_actions]
+      def to_a
+        [actions, negated_actions]
       end
 
       DICTIONARIES = {

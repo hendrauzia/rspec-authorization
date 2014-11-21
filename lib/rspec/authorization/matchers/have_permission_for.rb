@@ -99,27 +99,25 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :prefix, :behave, :actions, :negated_actions, :results, :negated_results, :resource
+        attr_reader :controller, :role, :prefix, :action, :results, :negated_results, :resource
 
         def initialize(role)
-          @role    = role
-          @actions = @negated_actions = []
-
-          @resource     = Resource.new
-          resource.role = role
+          @role, @resource = role, Resource.new
+          resource.role    = role
+          resource.actions = [:index]
         end
 
         def to(action)
           @prefix  = :to
-          @behave  = action
-          @actions = [behave]
+          @action  = action
+
+          resource.actions = [action]
 
           self
         end
 
         def method_missing(method_name, *args, &block)
           resource.restful_helper_method = method_name
-          @prefix, @behave, @actions, @negated_actions = resource.restful_helper_method
 
           self
         end
@@ -147,13 +145,13 @@ module RSpec::Authorization
         end
 
         def description
-          "have permission for #{role} #{prefix_formatted} #{behave}"
+          "have permission for #{role} #{humanized_behavior}"
         end
 
         private
 
-        def prefix_formatted
-          prefix.to_s.sub("_", " ")
+        def humanized_behavior
+          resource.restful_helper_method.try(:humanize) || "#{@prefix} #{action}"
         end
 
         def common_failure_message
@@ -177,11 +175,11 @@ module RSpec::Authorization
         end
 
         def requests
-          run_requests(actions)
+          run_requests(resource.actions)
         end
 
         def negated_requests
-          run_requests(negated_actions)
+          run_requests(resource.negated_actions)
         end
 
         def run_requests(params)

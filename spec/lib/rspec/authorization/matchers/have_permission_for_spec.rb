@@ -17,12 +17,9 @@ describe HavePermissionFor do
   subject { matcher.to(action) }
 
   its(:role)    { is_expected.to eq role }
-  its(:behave)  { is_expected.to eq action }
-  its(:actions) { is_expected.to eq [action] }
-
-  its(:description) { is_expected.to eq "have permission for #{role} to #{matcher.behave}" }
-  its(:failure_message) { is_expected.to eq "Expected #{klass} to have permission for #{role} to #{matcher.behave}. results: #{results}, negated_results: " }
-  its(:failure_message_when_negated) { is_expected.to eq "Did not expect #{klass} to have permission for #{role} to #{matcher.behave}. results: #{results}, negated_results: " }
+  its(:description) { is_expected.to eq "have permission for #{role} to #{matcher.action}" }
+  its(:failure_message) { is_expected.to eq "Expected #{klass} to have permission for #{role} to #{matcher.action}. results: #{results}, negated_results: " }
+  its(:failure_message_when_negated) { is_expected.to eq "Did not expect #{klass} to have permission for #{role} to #{matcher.action}. results: #{results}, negated_results: " }
 
   context "evaluator" do
     before { allow(matcher).to receive(:requests).and_return([]) }

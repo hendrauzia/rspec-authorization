@@ -4,24 +4,27 @@ include RSpec::Authorization::Adapters
 
 describe RestfulHelperMethod do
   let(:restful_helper_method) { RestfulHelperMethod.new(name) }
+
   subject { restful_helper_method }
 
-  describe "#to_ary" do
+  describe "#humanize" do
+    let(:name) { :only_to_read }
+
+    specify { expect(restful_helper_method.humanize).to eq "only to read" }
+  end
+
+  describe "#to_a" do
     let(:name)    { :to_read }
     let(:actions) { %i(list of action from actions) }
     let(:negated_actions) { %i(list of negated action from negated_actions) }
 
     before do
-      allow(restful_helper_method).to receive(:prefix).and_return(:prefix)
-      allow(restful_helper_method).to receive(:behavior).and_return(:behavior)
       allow(restful_helper_method).to receive(:actions).and_return(actions)
       allow(restful_helper_method).to receive(:negated_actions).and_return(negated_actions)
     end
 
     context "implicitly infers to array" do
-      before  { @prefix, @behavior, @actions, @negated_actions = restful_helper_method }
-
-      specify { expect([@prefix, @behavior, @actions, @negated_actions]).to eq [:prefix, :behavior, actions, negated_actions] }
+      specify { expect([*restful_helper_method]).to eq [actions, negated_actions] }
     end
   end
 

@@ -2,9 +2,20 @@ module RSpec::Authorization
   module Adapters
     class Resource # :nodoc:
       attr_reader :restful_helper_method
+      attr_writer :actions, :negated_actions
       attr_accessor :controller_class, :role
 
-      delegate :prefix, to: :restful_helper_method
+      def initialize
+        @actions = @negated_actions = []
+      end
+
+      def actions
+        restful_helper_method.try(:actions) || @actions
+      end
+
+      def negated_actions
+        restful_helper_method.try(:negated_actions) || @negated_actions
+      end
 
       def restful_helper_method=(method_name)
         @restful_helper_method = RestfulHelperMethod.new(method_name)
