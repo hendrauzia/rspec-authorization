@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+include RSpec::Authorization::Adapters
 include RSpec::Authorization::Matchers::HavePermissionFor
 
 describe HavePermissionFor do
@@ -10,19 +11,19 @@ describe HavePermissionFor do
   let(:matcher) { HavePermissionFor.new(role) }
 
   before do
+    allow_any_instance_of(Resource).to receive(:results).and_return(results)
     allow(matcher).to receive(:controller).and_return(klass.new)
-    allow(matcher).to receive(:results).and_return(results)
   end
 
   subject { matcher.to(action) }
 
-  its(:role)    { is_expected.to eq role }
+  its(:role) { is_expected.to eq role }
   its(:description) { is_expected.to eq "have permission for #{role} to #{matcher.action}" }
   its(:failure_message) { is_expected.to eq "Expected #{klass} to have permission for #{role} to #{matcher.action}. results: #{results}, negated_results: " }
   its(:failure_message_when_negated) { is_expected.to eq "Did not expect #{klass} to have permission for #{role} to #{matcher.action}. results: #{results}, negated_results: " }
 
   context "evaluator" do
-    before { allow(matcher).to receive(:requests).and_return([]) }
+    before { allow_any_instance_of(Resource).to receive(:requests).and_return([]) }
 
     describe "#matches?" do
       context "all requests permitted" do

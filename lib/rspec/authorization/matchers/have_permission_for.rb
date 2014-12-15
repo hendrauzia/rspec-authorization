@@ -99,7 +99,7 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :prefix, :action, :results, :negated_results, :resource
+        attr_reader :controller, :role, :prefix, :action, :resource
 
         def initialize(role)
           @role, @resource = role, Resource.new
@@ -159,11 +159,11 @@ module RSpec::Authorization
         end
 
         def debug_results
-          "results: #{results}, negated_results: #{negated_results}"
+          "results: #{resource.results}, negated_results: #{resource.negated_results}"
         end
 
         def permitted_or_forbidden?(primary, secondary)
-          send(primary, results) && (negated_results.present? ? send(secondary, negated_results) : true)
+          send(primary, resource.results) && (resource.negated_results.present? ? send(secondary, resource.negated_results) : true)
         end
 
         def permitted?(requests)
@@ -174,23 +174,11 @@ module RSpec::Authorization
           true unless requests.value? true
         end
 
-        def requests
-          run_requests(resource.actions)
-        end
-
-        def negated_requests
-          run_requests(resource.negated_actions)
-        end
-
-        def run_requests(params)
-          resource.run(params)
-        end
-
         def run_all_requests(controller)
           @controller = controller
 
-          @results         = Hash[requests]
-          @negated_results = Hash[negated_requests]
+          resource.requests
+          resource.negated_requests
         end
       end
     end

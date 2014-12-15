@@ -1,7 +1,7 @@
 module RSpec::Authorization
   module Adapters
     class Resource # :nodoc:
-      attr_reader :restful_helper_method
+      attr_reader :restful_helper_method, :results, :negated_results
       attr_writer :actions, :negated_actions
       attr_accessor :controller_class, :role
 
@@ -26,6 +26,14 @@ module RSpec::Authorization
           request = Request.new(controller_class, action, role)
           [action, request.response.status != 403]
         end
+      end
+
+      def requests
+        @results = Hash[run(actions)]
+      end
+
+      def negated_requests
+        @negated_results = Hash[run(negated_actions)]
       end
     end
   end
