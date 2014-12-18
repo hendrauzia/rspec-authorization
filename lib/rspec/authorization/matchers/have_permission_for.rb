@@ -126,14 +126,14 @@ module RSpec::Authorization
           resource.controller_class = controller.class
 
           resource.run_all
-          resource.permitted_or_forbidden?(:permitted?, :forbidden?)
+          resource.permitted?
         end
 
         def does_not_match?(controller)
           resource.controller_class = controller.class
 
           resource.run_all
-          resource.permitted_or_forbidden?(:forbidden?, :permitted?)
+          resource.forbidden?
         end
 
         def failure_message

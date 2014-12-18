@@ -33,8 +33,12 @@ module RSpec::Authorization
         negated_requests
       end
 
-      def permitted_or_forbidden?(primary, secondary)
-        send(primary, results) && (negated_results.present? ? send(secondary, negated_results) : true)
+      def permitted?
+        permitted_or_forbidden?(:permitted_for?, :forbidden_for?)
+      end
+
+      def forbidden?
+        permitted_or_forbidden?(:forbidden_for?, :permitted_for?)
       end
 
       private
@@ -47,11 +51,15 @@ module RSpec::Authorization
         @negated_results = Hash[run(negated_actions)]
       end
 
-      def permitted?(requests)
+      def permitted_or_forbidden?(primary, secondary)
+        send(primary, results) && (negated_results.present? ? send(secondary, negated_results) : true)
+      end
+
+      def permitted_for?(requests)
         true unless requests.value? false
       end
 
-      def forbidden?(requests)
+      def forbidden_for?(requests)
         true unless requests.value? true
       end
     end
