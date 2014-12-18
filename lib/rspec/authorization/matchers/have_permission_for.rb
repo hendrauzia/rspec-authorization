@@ -125,15 +125,15 @@ module RSpec::Authorization
         def matches?(controller)
           resource.controller_class = controller.class
 
-          run_all_requests(controller)
-          permitted_or_forbidden?(:permitted?, :forbidden?)
+          resource.run_all
+          resource.permitted_or_forbidden?(:permitted?, :forbidden?)
         end
 
         def does_not_match?(controller)
           resource.controller_class = controller.class
 
-          run_all_requests(controller)
-          permitted_or_forbidden?(:forbidden?, :permitted?)
+          resource.run_all
+          resource.permitted_or_forbidden?(:forbidden?, :permitted?)
         end
 
         def failure_message
@@ -155,30 +155,11 @@ module RSpec::Authorization
         end
 
         def common_failure_message
-          "#{controller.class} to #{description}. #{debug_results}"
+          "#{resource.controller_class} to #{description}. #{debug_results}"
         end
 
         def debug_results
           "results: #{resource.results}, negated_results: #{resource.negated_results}"
-        end
-
-        def permitted_or_forbidden?(primary, secondary)
-          send(primary, resource.results) && (resource.negated_results.present? ? send(secondary, resource.negated_results) : true)
-        end
-
-        def permitted?(requests)
-          true unless requests.value? false
-        end
-
-        def forbidden?(requests)
-          true unless requests.value? true
-        end
-
-        def run_all_requests(controller)
-          @controller = controller
-
-          resource.requests
-          resource.negated_requests
         end
       end
     end

@@ -28,12 +28,31 @@ module RSpec::Authorization
         end
       end
 
+      def run_all
+        requests
+        negated_requests
+      end
+
+      def permitted_or_forbidden?(primary, secondary)
+        send(primary, results) && (negated_results.present? ? send(secondary, negated_results) : true)
+      end
+
+      private
+
       def requests
         @results = Hash[run(actions)]
       end
 
       def negated_requests
         @negated_results = Hash[run(negated_actions)]
+      end
+
+      def permitted?(requests)
+        true unless requests.value? false
+      end
+
+      def forbidden?(requests)
+        true unless requests.value? true
       end
     end
   end

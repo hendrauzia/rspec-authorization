@@ -9,10 +9,16 @@ describe HavePermissionFor do
   let(:klass)   { ArticlesController }
   let(:results) { {action => false} }
   let(:matcher) { HavePermissionFor.new(role) }
+  let(:resource) do
+    r = Resource.new
+    allow(r).to receive(:controller_class).and_return(klass)
+    r
+  end
 
   before do
     allow_any_instance_of(Resource).to receive(:results).and_return(results)
     allow(matcher).to receive(:controller).and_return(klass.new)
+    allow(matcher).to receive(:resource).and_return(resource)
   end
 
   subject { matcher.to(action) }
