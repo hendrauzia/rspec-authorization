@@ -99,7 +99,7 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :prefix, :action, :resource
+        attr_reader :controller, :role, :prefix, :action, :resource, :restful_helper_method
 
         def initialize(role)
           @role, @resource = role, Resource.new
@@ -117,7 +117,10 @@ module RSpec::Authorization
         end
 
         def method_missing(method_name, *args, &block)
-          resource.restful_helper_method = method_name
+          @restful_helper_method = RestfulHelperMethod.new(method_name)
+
+          resource.actions = restful_helper_method.actions
+          resource.negated_actions = restful_helper_method.negated_actions
 
           self
         end
@@ -151,7 +154,7 @@ module RSpec::Authorization
         private
 
         def humanized_behavior
-          resource.restful_helper_method.try(:humanize) || "#{@prefix} #{action}"
+          restful_helper_method.try(:humanize) || "#{@prefix} #{action}"
         end
 
         def common_failure_message
