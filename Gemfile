@@ -14,6 +14,10 @@ group :development, :test do
   gem 'turbolinks'
 end
 
+group :test do
+  gem 'shoulda-matchers', require: false
+end
+
 group :docs do
   gem "inch"
   gem "rdoc"

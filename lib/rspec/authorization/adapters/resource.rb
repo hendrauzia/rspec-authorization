@@ -1,11 +1,15 @@
 module RSpec::Authorization
   module Adapters
     class Resource # :nodoc:
-      attr_reader :results, :negated_results
-      attr_accessor :controller_class, :role, :actions, :negated_actions
+      attr_reader :results, :negated_results, :privilege
 
-      def initialize
-        @actions = @negated_actions = []
+      delegate :actions, to: :privilege
+      delegate :negated_actions, to: :privilege
+      delegate :controller_class, to: :privilege
+      delegate :role, to: :privilege
+
+      def initialize(privilege)
+        @privilege = privilege
       end
 
       def run(actions)

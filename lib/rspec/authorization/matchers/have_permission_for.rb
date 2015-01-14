@@ -99,19 +99,21 @@ module RSpec::Authorization
       class HavePermissionFor # :nodoc: all
         include Adapters
 
-        attr_reader :controller, :role, :prefix, :action, :resource, :restful_helper_method
+        attr_reader :role, :prefix, :action
+        attr_reader :resource, :restful_helper_method, :privilege
+        attr_reader :actions, :negated_actions
 
         def initialize(role)
-          @role, @resource = role, Resource.new
-          resource.role    = role
-          resource.actions = [:index]
+          @role = role
+
+          @actions = [:index]
+          @negated_actions = []
         end
 
         def to(action)
           @prefix  = :to
           @action  = action
-
-          resource.actions = [action]
+          @actions = [action]
 
           self
         end
@@ -119,21 +121,21 @@ module RSpec::Authorization
         def method_missing(method_name, *args, &block)
           @restful_helper_method = RestfulHelperMethod.new(method_name)
 
-          resource.actions = restful_helper_method.actions
-          resource.negated_actions = restful_helper_method.negated_actions
+          @actions = restful_helper_method.actions
+          @negated_actions = restful_helper_method.negated_actions
 
           self
         end
 
         def matches?(controller)
-          resource.controller_class = controller.class
+          build_resource(controller)
 
           resource.run_all
           resource.permitted?
         end
 
         def does_not_match?(controller)
-          resource.controller_class = controller.class
+          build_resource(controller)
 
           resource.run_all
           resource.forbidden?
@@ -152,6 +154,17 @@ module RSpec::Authorization
         end
 
         private
+
+        def build_resource(controller)
+          @privilege = Privilege.new(
+            actions: actions,
+            negated_actions: negated_actions,
+            controller_class: controller.class,
+            role: role
+          )
+
+          @resource = Resource.new(privilege)
+        end
 
         def humanized_behavior
           restful_helper_method.try(:humanize) || "#{@prefix} #{action}"

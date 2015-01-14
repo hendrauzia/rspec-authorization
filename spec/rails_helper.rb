@@ -7,6 +7,7 @@ require 'spec_helper'
 require "#{ENV['RAILS_ROOT']}/config/environment"
 require 'rspec/rails'
 require 'rspec/authorization'
+require 'shoulda-matchers'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
