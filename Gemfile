@@ -5,6 +5,7 @@ gemspec
 
 group :development, :test do
   gem 'declarative_authorization', github: 'stffn/declarative_authorization'
+  gem 'devise'
   gem 'guard-rspec'
   gem 'pry'
   gem 'terminal-notifier-guard' if `uname` =~ /Darwin/

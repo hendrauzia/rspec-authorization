@@ -136,7 +136,10 @@ module RSpec::Authorization
 
       def stub_callbacks
         group.before do
-          methods = controller._process_action_callbacks.map(&:filter).split(:filter_access_filter).last
+          methods = controller._process_action_callbacks.map(&:filter)
+          methods.delete(:filter_access_filter)
+
+          methods = methods.select { |m| m.is_a? Symbol }
           controller.instance_eval do
             methods.each do |method|
               define_singleton_method method do |*args, &block|
