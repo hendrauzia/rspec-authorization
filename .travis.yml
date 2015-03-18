@@ -1,5 +1,8 @@
 language: ruby
 rvm:
   - 2.1.4
+gemfiles:
+  - gemfiles/rails_4.1.9.gemfile
+  - gemfiles/rails_4.2.0.gemfile
 before_script:
   - bundle exec rake setup

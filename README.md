@@ -20,7 +20,13 @@ declarative_authorization's rules inside controller using RSpec matcher.
 Add this line to your application's Gemfile:
 
 
-    gem 'rspec-authorization', group: :test
+    gem 'rspec-authorization', group: :test, require: false
+
+
+Add this to `spec_helper.rb`:
+
+
+    require 'rspec/authorization'
 
 
 And then execute:
@@ -38,7 +44,7 @@ dependencies, following are requirements for this gem:
 
 - declarative_authorization 1.0.0.pre
 - rails 4.x
-- rspec-rails 3.x
+- rspec-rails 3.1.x
 
 ## Usage
 

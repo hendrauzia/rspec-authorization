@@ -1,17 +1,16 @@
 source 'https://rubygems.org'
-ruby '2.1.4'
-
 gemspec
 
 group :development, :test do
+  gem "codeclimate-test-reporter", require: nil
   gem 'declarative_authorization', github: 'stffn/declarative_authorization'
   gem 'devise'
   gem 'guard-rspec'
-  gem 'pry'
-  gem 'terminal-notifier-guard' if `uname` =~ /Darwin/
-  gem "codeclimate-test-reporter", require: nil
-
   gem 'jquery-rails'
+
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'terminal-notifier-guard' if `uname` =~ /Darwin/
   gem 'turbolinks'
 end
 
