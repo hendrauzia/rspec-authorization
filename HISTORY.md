@@ -1,3 +1,23 @@
+[v0.0.6 / 2015-03-19] (https://github.com/hendrauzia/rspec-authorization/tree/v0.0.6)
+=====================
+
+  * Fix travis build matrix
+  * Add appraisal to test on multiple dependencies
+  * Stub all before and after callback except filter_access_filter
+  * Refactor resource initialization to use privilege class.
+  * Refactor restful helper method actions and negated actions out of resource
+  * Refactor permitted or forbidden into 2 separate permitted and forbidden methods
+  * Refactor run all requests and permitted or forbidden to resource
+  * Refactor actions, results and their negated counterparts to resource
+  * Refactor actions and negated actions from have_permission_to to resource
+  * Refactor restful helper method to resource class
+  * Refactor multiple request running to a resource class
+  * Refactor have permission for matcher
+  * Refactor restful helper method initialization
+  * Add focused restful helper method
+  * Refactor restful helper method generation from method missing to a class
+  * Refactor RESTful matcher method helper to use ruby's #method_missing
+  * Add license and history information in README
 
 [v0.0.2 / 2014-11-11] (https://github.com/hendrauzia/rspec-authorization/tree/v0.0.2)
 =====================
@@ -29,4 +49,3 @@
   * Add rspec-rails for specs
   * Add rspec-authorization gem scaffold using bundler
   * Initial commit
-

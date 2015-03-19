@@ -7,9 +7,9 @@ GIT
 PATH
   remote: ../
   specs:
-    rspec-authorization (0.0.2)
+    rspec-authorization (0.0.6)
       declarative_authorization
-      rspec-rails (~> 3.1.0)
+      rspec-rails (~> 3.0, < 3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -47,7 +47,7 @@ GEM
     arel (5.0.1.20140414130214)
     bcrypt (3.1.10)
     builder (3.2.2)
-    byebug (4.0.2)
+    byebug (4.0.3)
       columnize (= 0.9.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
