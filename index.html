@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>rspec-authorization by hendrauzia</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>rspec-authorization</h1>
+          <h2>RSpec matcher for declarative_authorization</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/hendrauzia/rspec-authorization/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/hendrauzia/rspec-authorization/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/hendrauzia/rspec-authorization" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="rspecauthorization" class="anchor" href="#rspecauthorization" aria-hidden="true"><span class="octicon octicon-link"></span></a>RSpec::Authorization</h1>
+
+<p><a href="http://github.com/hendrauzia/rspec-authorization"><img src="http://img.shields.io/badge/github-hendrauzia/rspec--authorization-blue.svg" alt="GitHub"></a>
+<a href="http://rubydoc.org/github/hendrauzia/rspec-authorization"><img src="http://img.shields.io/badge/docs-rdoc.info-blue.svg" alt="Documentation"></a>
+<a href="#license"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a></p>
+
+<p><a href="http://badge.fury.io/rb/rspec-authorization"><img src="https://badge.fury.io/rb/rspec-authorization.svg" alt="Gem Version"></a>
+<a href="https://travis-ci.org/hendrauzia/rspec-authorization"><img src="https://travis-ci.org/hendrauzia/rspec-authorization.svg" alt="Build Status"></a>
+<a href="https://codeclimate.com/github/hendrauzia/rspec-authorization"><img src="https://codeclimate.com/github/hendrauzia/rspec-authorization/badges/gpa.svg" alt="Code Climate"></a>
+<a href="https://codeclimate.com/github/hendrauzia/rspec-authorization"><img src="https://codeclimate.com/github/hendrauzia/rspec-authorization/badges/coverage.svg" alt="Test Coverage"></a>
+<a href="https://gemnasium.com/hendrauzia/rspec-authorization"><img src="https://gemnasium.com/hendrauzia/rspec-authorization.svg" alt="Dependency Status"></a>
+<a href="https://hakiri.io/github/hendrauzia/rspec-authorization/master"><img src="https://hakiri.io/github/hendrauzia/rspec-authorization/master.svg" alt="security"></a>
+<a href="http://inch-ci.org/github/hendrauzia/rspec-authorization"><img src="http://inch-ci.org/github/hendrauzia/rspec-authorization.svg?branch=master" alt="Inline docs"></a></p>
+
+<p>RSpec matcher for declarative_authorization. A neat way of asserting
+declarative_authorization's rules inside controller using RSpec matcher.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'rspec-authorization', group: :test, require: false
+</code></pre>
+
+<p>Add this to <code>spec_helper.rb</code>:</p>
+
+<pre><code>require 'rspec/authorization'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>gem install rspec-authorization
+</code></pre>
+
+<h2>
+<a id="requirement" class="anchor" href="#requirement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirement</h2>
+
+<p>Current development focus is as follows, future development may support other
+dependencies, following are requirements for this gem:</p>
+
+<ul>
+<li>declarative_authorization 1.0.0.pre</li>
+<li>rails 4.x</li>
+<li>rspec-rails 3.1.x</li>
+</ul>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>In your controller spec:</p>
+
+<pre><code>describe ArticlesController do
+  it { is_expected.to have_permission_for(:a_role).to(:restful_action_name) }
+
+  it { is_expected.to have_permission_for(:writer).to(:index) }
+  it { is_expected.to have_permission_for(:writer).to(:show) }
+  it { is_expected.to have_permission_for(:writer).to(:new) }
+  it { is_expected.to have_permission_for(:writer).to(:create) }
+  it { is_expected.not_to have_permission_for(:writer).to(:edit) }
+  it { is_expected.not_to have_permission_for(:writer).to(:update) }
+  it { is_expected.not_to have_permission_for(:writer).to(:destroy) }
+end
+</code></pre>
+
+<p>You can also use convenience restful helper methods:</p>
+
+<pre><code>describe ArticlesController do
+  it { is_expected.to have_permission_for(:user).to_read }
+  it { is_expected.not_to have_permission_for(:user).to_create }
+  it { is_expected.not_to have_permission_for(:user).to_update }
+  it { is_expected.not_to have_permission_for(:user).to_delete }
+
+  it { is_expected.to have_permission_for(:writer).to_read }
+  it { is_expected.to have_permission_for(:writer).to_create }
+  it { is_expected.to have_permission_for(:writer).to_update }
+  it { is_expected.not_to have_permission_for(:writer).to_delete }
+
+  it { is_expected.to have_permission_for(:editor).to_manage }
+end
+</code></pre>
+
+<p>Or you can also use the focused restful helper method as follows:</p>
+
+<pre><code>describe ArticlesController do
+  it { is_expected.to have_permision_for(:user).only_to_read }
+  it { is_expected.to have_permision_for(:writer).except_to_delete }
+end
+</code></pre>
+
+<h2>
+<a id="history" class="anchor" href="#history" aria-hidden="true"><span class="octicon octicon-link"></span></a>History</h2>
+
+<p>See {file:HISTORY.md} for history of changes.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>rspec-authorization © 2014 by Hendra Uzia. rspec-authorization is
+licensed under the MIT license except for some files which come from the
+RDoc/Ruby distributions. Please see the {file:LICENSE.txt} documents
+for more information.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it ( <a href="https://github.com/hendrauzia/rspec-authorization/fork">https://github.com/hendrauzia/rspec-authorization/fork</a> )</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Setup rails test app (<code>bundle exec rake setup</code>)</li>
+<li>Test your changes (<code>bundle exec rake spec</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create a new Pull Request</li>
+</ol>
+        </section>
+
+        <footer>
+          rspec-authorization is maintained by <a href="https://github.com/hendrauzia">hendrauzia</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-60953022-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
