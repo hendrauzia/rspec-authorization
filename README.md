@@ -105,3 +105,16 @@ for more information.
 5. Commit your changes (`git commit -am 'Add some feature'`)
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create a new Pull Request
+
+## Prepare for Release
+
+1. Add changelog to history. (`git changelog -l >> HISTORY.md`)
+2. Increase version number in `lib/rspec/authorization/version.rb`.
+3. `bundle exec appraisal update`.
+4. `git commit -am "Prepare for release x.y.z"`.
+
+## How To Release
+
+1. `bundle exec appraisal rake spec`
+2. `git push origin master` (wait for travis build to pass)
+3. `bundle exec rake release`
